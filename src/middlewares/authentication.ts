@@ -9,8 +9,8 @@ export default async function verify(
   next: NextFunction
 ) {
   const ticket = await client.verifyIdToken({
-    idToken: req.headers.Authentication as string,
-    audience: process.env.CLIENT_ID, // Specify the CLIENT_ID of the app that accesses the backend
+    idToken: req.headers.authorization as string,
+    audience: process.env.GOOGLE_CLIENT_ID,
   });
 
   const payload = ticket.getPayload();
