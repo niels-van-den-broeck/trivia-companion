@@ -11,4 +11,7 @@ model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String
+  profilePicture String
+  lastLogin DateTime?
+  registeredAt DateTime @default(dbgenerated())
 }
