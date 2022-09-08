@@ -23,7 +23,7 @@ const loginCallback: RequestHandler = async (req, res, next) => {
 
     const dbUser = await db.user.upsert({
       where: {
-        email: user?.email,
+        email: user.email,
       },
       update: {
         name: user.name || 'John Doe',
