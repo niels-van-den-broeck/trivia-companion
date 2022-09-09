@@ -1,21 +1,17 @@
 import { RequestHandler, Router } from 'express';
 
-import { OAuth2Client } from 'google-auth-library';
 import db from '../services/db';
 import HttpError from '../services/http-error';
-
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+import firebase from '../services/firebase';
 
 const loginCallback: RequestHandler = async (req, res, next) => {
   try {
     if (!req.body.idToken) throw new Error();
 
-    const ticket = await client.verifyIdToken({
-      idToken: req.body.idToken as string,
-      audience: process.env.GOOGLE_CLIENT_ID,
-    });
-
-    const user = ticket.getPayload();
+    const user = await firebase.auth
+      .verifyIdToken(req.body.idToken)
+      .then(user => user)
+      .catch(() => undefined);
 
     if (!user) throw HttpError.unauthorized();
 
@@ -29,6 +25,7 @@ const loginCallback: RequestHandler = async (req, res, next) => {
         name: user.name || 'John Doe',
         email: user.email as string,
         profilePicture: user.picture as string,
+        firebaseuid: user.sub as string,
         lastLogin: now,
       },
       create: {
@@ -36,6 +33,7 @@ const loginCallback: RequestHandler = async (req, res, next) => {
         email: user.email as string,
         profilePicture: user.picture as string,
         registeredAt: now,
+        firebaseuid: user.sub as string,
         lastLogin: now,
       },
     });

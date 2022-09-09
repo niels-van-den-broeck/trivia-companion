@@ -8,7 +8,8 @@ datasource db {
 }
 
 model User {
-  id             String       @id @default(uuid())
+  id             String    @id @default(uuid())
+  firebaseuid    String    @unique
   email          String    @unique
   name           String
   profilePicture String
@@ -31,7 +32,7 @@ model Question {
   quiz   Quiz     @relation(fields: [quizId], references: [id])
   quizId String
   question String
-  Answer Answer[]
+  Answers Answer[]
 }
 
 model Quiz {
@@ -39,5 +40,5 @@ model Quiz {
   title String
   owner User   @relation(fields: [userId], references: [id])
   userId   String
-  Question Question[]
+  Questions Question[]
 }
