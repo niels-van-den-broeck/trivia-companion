@@ -6,7 +6,7 @@ import firebase from '../services/firebase';
 
 const loginCallback: RequestHandler = async (req, res, next) => {
   try {
-    if (!req.body.idToken) throw new Error();
+    if (!req.body.idToken) throw HttpError.badRequest();
 
     const user = await firebase.auth
       .verifyIdToken(req.body.idToken)

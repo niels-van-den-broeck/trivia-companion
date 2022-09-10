@@ -1,17 +1,15 @@
 import { RequestHandler } from 'express';
-import { OAuth2Client } from 'google-auth-library';
 import db from '../services/db';
+import firebase from '../services/firebase';
 import HttpError from '../services/http-error';
 
-const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
-
 const verify: RequestHandler = async (req, res, next) => {
-  const ticket = await client.verifyIdToken({
-    idToken: req.headers.authorization as string,
-    audience: process.env.GOOGLE_CLIENT_ID,
-  });
+  if (!req.headers.authorization) return next(HttpError.unauthorized());
 
-  const payload = ticket.getPayload();
+  const payload = await firebase.auth
+    .verifyIdToken(req.headers.authorization)
+    .then(user => user)
+    .catch(() => undefined);
 
   if (!payload) return next(HttpError.unauthorized());
 

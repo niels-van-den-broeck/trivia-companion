@@ -12,7 +12,7 @@ model User {
   firebaseuid    String    @unique
   email          String    @unique
   name           String
-  profilePicture String
+  profilePicture String?
   lastLogin      DateTime?
   registeredAt   DateTime  @default(dbgenerated())
   Quiz           Quiz[]
