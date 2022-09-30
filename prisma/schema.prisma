@@ -38,6 +38,7 @@ model Question {
 model Quiz {
   id    String    @id @default(uuid())
   title String
+  theme String?
   owner User   @relation(fields: [userId], references: [id])
   userId   String
   Questions Question[]

@@ -11,6 +11,7 @@ import HttpError from '../services/http-error';
 
 type QuizBody = {
   title: string;
+  theme?: string;
 };
 
 const postQuiz = async (req: Request, res: Response, next: NextFunction) => {
@@ -20,6 +21,7 @@ const postQuiz = async (req: Request, res: Response, next: NextFunction) => {
   const quiz = await db.quiz.create({
     data: {
       title: quizBody.title,
+      theme: quizBody.theme,
       owner: {
         connect: {
           id: user?.id as string,
@@ -32,6 +34,7 @@ const postQuiz = async (req: Request, res: Response, next: NextFunction) => {
     res.json({
       id: quiz.id,
       title: quiz.title,
+      theme: quiz.theme,
     });
   } catch (e) {
     next(e);
@@ -60,6 +63,7 @@ const getQuiz: RequestHandler<{ id: string }> = async (req, res, next) => {
     res.json({
       id: quiz.id,
       title: quiz.title,
+      theme: quiz.theme,
       questions: quiz.Questions,
     });
   } catch (e) {
@@ -80,6 +84,7 @@ const getQuizList: RequestHandler = async (req, res, next) => {
       quizList.map(quiz => ({
         id: quiz.id,
         title: quiz.title,
+        theme: quiz.theme,
         questions: quiz.Questions,
       }))
     );
